@@ -13,7 +13,7 @@ public class Arrow : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        rb.velocity = Vector2.right * speed;
+        rb.velocity = transform.right * speed;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {

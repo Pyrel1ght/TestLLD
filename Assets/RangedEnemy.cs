@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RangedEnemy : Enemy
+public class RangedEnemy : EnemyBase
 {
     [SerializeField] float timer, arrowSpeed;
     [SerializeField] GameObject arrow,child;
@@ -17,23 +17,27 @@ public class RangedEnemy : Enemy
             transform.localScale = new Vector3(-transform.localScale.x, 1f, 1f);
         }
         if (tempTimer >= timer) {
-            Attack();
+            _attack.Attack();
             tempTimer = 0;
         } else
         {
             tempTimer += Time.deltaTime;
         }
     }
-    void Attack()
+    private void Awake()
     {
-        child = Instantiate(arrow,transform.position,Quaternion.identity,null);
-        if (facingRight)
-        {
-            child.GetComponent<Arrow>().Speed = arrowSpeed;
-        }
-        else
-        {
-            child.GetComponent<Arrow>().Speed = -arrowSpeed;
-        }
+        SetAttack(new RangedAttack(gameObject,arrow,arrowSpeed));
     }
+    //void Attack()
+    //{
+    //    child = Instantiate(arrow,transform.position,Quaternion.identity,null);
+    //    if (facingRight)
+    //    {
+    //        child.GetComponent<Arrow>().Speed = arrowSpeed;
+    //    }
+    //    else
+    //    {
+    //        child.GetComponent<Arrow>().Speed = -arrowSpeed;
+    //    }
+    //}
 }

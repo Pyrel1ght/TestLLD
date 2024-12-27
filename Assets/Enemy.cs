@@ -2,17 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, IDamageable
+public class Enemy : EnemyBase
 {
-    [SerializeField]protected RaycastHit2D Groundhit, Wallhit;
-    [SerializeField]float speed;
-    [SerializeField] Rigidbody2D rb;
-    [SerializeField]protected LayerMask groundMask;
-    [SerializeField]protected Transform groundCheck;
-    [SerializeField]protected bool facingRight = true;
 
-
-    // Update is called once per frame
     void Update()
     {
         Groundhit = Physics2D.Raycast(groundCheck.position,-transform.up,0.2f,groundMask);
@@ -24,30 +16,17 @@ public class Enemy : MonoBehaviour, IDamageable
         }
 
     }
-    private void FixedUpdate()
-    {
-        if (facingRight)
-        {
-            rb.velocity = new Vector2(speed, rb.velocity.y);
-            
-        }
-        else
-        {
-            rb.velocity = new Vector2(-speed, rb.velocity.y);
-            
-        }
-    }
-    public void Damage()
-    {
-        Destroy(gameObject);
-        
-    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.GetComponent<IDamageable>()!=null && collision.gameObject.tag == "Player")
+        IDamageable collisionDamage = collision.gameObject.GetComponent<IDamageable>();
+        
+        if (collisionDamage!=null && collision.gameObject.tag == "Player")
         {
-            collision.gameObject.GetComponent<IDamageable>().Damage();
+            MeleeAttack attack = new MeleeAttack(collisionDamage);
+            SetAttack(attack);
+            _attack.Attack();
             Debug.Log("Enemy attacked");
         }
+        
     }
 }
